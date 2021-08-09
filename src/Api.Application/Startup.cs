@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.Infraestructure.Crosscutting.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,11 @@ namespace application
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConfiguration>(Configuration);
+            //Configure.ConfigureDependencyService(services);
+            //services.ConfigureDependencyRepository(Configuration);
+            ConfigureDependecy.ConfigureRepository(services, Configuration);
+            ConfigureDependecy.ConfigureService(services);
             services.AddControllers();
         }
 
