@@ -1,0 +1,13 @@
+Precisa instalar a ferramenta do EF
+dotnet tool install --global dotnet-ef
+
+adicionando referencia da Api.Domain
+
+dotnet add (onde) reference (de quem)
+
+
+adicionando migration
+ dotnet ef migrations add
+jogando as informações para o banco de dados do bd
+dotnet ef database update
+
