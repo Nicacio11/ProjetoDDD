@@ -26,11 +26,25 @@ namespace application
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(Configuration);
-            //Configure.ConfigureDependencyService(services);
-            //services.ConfigureDependencyRepository(Configuration);
             ConfigureDependecy.ConfigureRepository(services, Configuration);
             ConfigureDependecy.ConfigureService(services);
             services.AddControllers();
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Version = "v1",
+                    Title = "Api Rest AspNet Core",
+                    Description = "Usando DDD",
+                    //TermsOfService = new Uri("https://github.com/Nicacio11/ProjetoDDD"),
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                    {
+                        Name = "Vítor Nicácio dos Santos",
+                        Email = "vitornicacio10@hotmail.com",
+                        Url = new Uri("https://github.com/Nicacio11/ProjetoDDD")
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +55,12 @@ namespace application
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", ".Net API DDD");
+                c.RoutePrefix = string.Empty;
+            });
             app.UseRouting();
 
             app.UseAuthorization();
