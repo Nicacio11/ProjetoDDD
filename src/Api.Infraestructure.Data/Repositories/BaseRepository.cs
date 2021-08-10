@@ -79,8 +79,8 @@ namespace Api.Infraestructure.Data.Repositories
                 {
                     throw new Exception("Item não encontrado!");
                 }
-                item.UpdatedAt = DateTime.UtcNow;
-                item.CreatedAt = item.CreatedAt;
+                entity.UpdatedAt = DateTime.UtcNow;
+                entity.CreatedAt = item.CreatedAt;
 
                 _context.Entry(item).CurrentValues.SetValues(entity);
                 await _context.SaveChangesAsync();
