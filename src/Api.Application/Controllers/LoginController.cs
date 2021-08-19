@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Api.Domain.Dtos;
 using Api.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Application.Controllers
@@ -12,6 +13,7 @@ namespace Api.Application.Controllers
     public class LoginController : ControllerBase
     {
         [HttpPost]
+        [AllowAnonymous]
         public async Task<object> LoginAsync([FromBody] LoginDto user, [FromServices] ILoginService service)
         {
             if (!ModelState.IsValid)

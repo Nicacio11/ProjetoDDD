@@ -45,7 +45,6 @@ namespace Api.Service.Services
                         new[]
                         {
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.UniqueName, user.Email)
                         }
                     );
                     var createDate = DateTime.Now;
