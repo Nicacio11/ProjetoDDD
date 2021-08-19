@@ -15,6 +15,7 @@ namespace Api.Infraestructure.Crosscutting.DependencyInjection
         public static void ConfigureService(IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ILoginService, LoginService>();
         }
         public static void ConfigureRepository(IServiceCollection services, IConfiguration configuration)
         {
