@@ -11,7 +11,7 @@ namespace Api.Infraestructure.Data.Repositories
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly MyContext _context;
-        private DbSet<T> _dataSet;
+        protected DbSet<T> _dataSet;
         public BaseRepository(MyContext context)
         {
             _context = context;
