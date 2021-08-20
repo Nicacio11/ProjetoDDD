@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Api.Domain.Dtos.User;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +18,11 @@ namespace Api.Application.Controllers
     {
 
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IMapper _mapper;
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,9 +30,10 @@ namespace Api.Application.Controllers
         {
             try
             {
-                return Ok(await _userService.Get());
+                var users = await _userService.Get();
+                return Ok(_mapper.Map<IEnumerable<UserDto>>(users));
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
@@ -38,7 +44,8 @@ namespace Api.Application.Controllers
         {
             try
             {
-                return Ok(await _userService.Get(id));
+                var user = await _userService.Get(id);
+                return Ok(_mapper.Map<UserDto>(user));
             }
             catch (ArgumentException e)
             {
@@ -47,7 +54,7 @@ namespace Api.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] UserEntity user)
+        public async Task<ActionResult> Post([FromBody] UserDto user)
         {
             if (!ModelState.IsValid)
             {
@@ -55,9 +62,11 @@ namespace Api.Application.Controllers
             }
             try
             {
-                var result = await _userService.Post(user);
-                if (result != null)
+                var entity = _mapper.Map<UserEntity>(user);
+                var post = await _userService.Post(entity);
+                if (post != null)
                 {
+                    var result = _mapper.Map<UserDto>(post);
                     return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
                 }
                 else
@@ -72,7 +81,7 @@ namespace Api.Application.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody] UserEntity user)
+        public async Task<ActionResult> Put(Guid id, [FromBody] UserDto user)
         {
             if (!ModelState.IsValid)
             {
@@ -81,12 +90,13 @@ namespace Api.Application.Controllers
             try
             {
                 user.Id = id;
-                var result = await _userService.Put(user);
-                if (result == null)
+                var entity = _mapper.Map<UserEntity>(user);
+                var put = await _userService.Put(entity);
+                if (put == null)
                 {
                     return BadRequest();
                 }
-                return Ok(result);
+                return Ok(_mapper.Map<UserDto>(put));
             }
             catch (ArgumentException e)
             {
