@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Domain.Security;
 using Api.Infraestructure.Crosscutting.DependencyInjection;
+using Api.Infraestructure.Crosscutting.Mappings;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +35,14 @@ namespace application
             services.AddSingleton<IConfiguration>(Configuration);
             ConfigureDependecy.ConfigureRepository(services, Configuration);
             ConfigureDependecy.ConfigureService(services);
+
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfile());
+            });
+
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
             var signingConfigurations = new SigningConfigurations();
             services.AddSingleton(signingConfigurations);
